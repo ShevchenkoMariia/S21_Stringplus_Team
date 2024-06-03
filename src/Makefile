@@ -8,13 +8,26 @@ LIB_CMD = ar rc
 TESTS_FLAGS = -lcheck -lsubunit -lm -lrt -lpthread
 GCOV_FLAGS = --coverage -fprofile-arcs -ftest-coverage
 
+ifeq ($(shell uname -s), Linux)
+OPEN_CMD = xdg-open
+endif
+ifeq ($(shell uname -s), Darwin)
+OPEN_CMD = open
+endif
+
 SRC = $(wildcard *.c)
 SRC_O = $(patsubst %.c, %.o, $(SRC))
+GCOV_SRC_O = $(patsubst %, gcov_%, $(SRC_O))
 
 TESTS = $(wildcard $(T_PATH)test_*.c)
 TESTS_EXE = $(notdir $(patsubst %.c, %, $(TESTS)))
 
-.PHONY: all test clean 
+#-------------------------------------------------------
+
+.PHONY: all test clean
+
+info:
+	@echo $(GCOV_SRC_O)
 
 all: s21_string.a test
 
@@ -26,16 +39,26 @@ s21_string.a: $(SRC_O)
 %.o: %.c 
 	$(CC) $(C_FLAGS) -c $< -lm
 
+gcov_lib.a: $(GCOV_SRC_O)
+	$(LIB_CMD) $@ $(GCOV_SRC_O)
+	ranlib $@
+	rm -f $(GCOV_SRC_O)
+
+gcov_%.o: %.c
+	$(CC) $(C_FLAGS) -c $< -o $@ $(GCOV_FLAGS) -lm
+
 test: $(TESTS_EXE) gcov_report
 
-test_%: $(T_PATH)test_%.c s21_string.a $(H_PATH)s21_string.h
-	$(CC) $(C_FLAGS) $< -L. s21_string.a -o $@ $(TESTS_FLAGS) 
+test_%: $(T_PATH)test_%.c gcov_lib.a
+	$(CC) $(C_FLAGS) $< -L. gcov_lib.a -o $@  $(GCOV_FLAGS) $(TESTS_FLAGS) 
 	./$@
 
 gcov_report:
+	rm -f gcov_lib.a
 	$(LC) report.info
 	genhtml -o report report.info
-	xdg-open report/index.html
+	$(OPEN_CMD) report/index.html
+
 
 check_style:
 	@cp ../materials/linters/.clang-format .
@@ -57,10 +80,10 @@ clean:
 	@rm -fr report
 	@echo "Cleaning is finished :)"
 
-gcov_report: s21_test.c s21_string.c
-    $(CC) $(FLAGS) s21_test.c $(TESTFLAGS) -fprofile-arcs -ftest-coverage s21_string.c -o report.out
-    ./report.out
-    lcov -o report.out.info -c -d .
-    genhtml -t "String tests" -o report report.out.info
-    rm .gcda.gcno *.info
-    open report/index.html
+#gcov_report: s21_test.c s21_string.c
+#    $(CC) $(FLAGS) s21_test.c $(TESTFLAGS) -fprofile-arcs -ftest-coverage s21_string.c -o report.out
+#    ./report.out
+#    lcov -o report.out.info -c -d .
+#    genhtml -t "String tests" -o report report.out.info
+#    rm .gcda.gcno *.info
+#    open report/index.html
