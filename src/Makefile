@@ -24,12 +24,12 @@ s21_string.a: $(SRC_O)
 	rm -f $(SRC_O)
 
 %.o: %.c 
-	$(CC) $(C_FLAGS) -c $< $(GCOV_FLAGS) -lm
+	$(CC) $(C_FLAGS) -c $< -lm
 
 test: $(TESTS_EXE) gcov_report
 
 test_%: $(T_PATH)test_%.c s21_string.a $(H_PATH)s21_string.h
-	$(CC) $(C_FLAGS) $< -L. s21_string.a -o $@ $(GCOV_FLAGS) $(TESTS_FLAGS) 
+	$(CC) $(C_FLAGS) $< -L. s21_string.a -o $@ $(TESTS_FLAGS) 
 	./$@
 
 gcov_report:
@@ -56,3 +56,11 @@ clean:
 	@rm -f *.a *.o *.gcno $(T_PATH)*.gcno $(S_PATH)*.gcno *.gcda *.info $(TESTS_EXE)
 	@rm -fr report
 	@echo "Cleaning is finished :)"
+
+gcov_report: s21_test.c s21_string.c
+    $(CC) $(FLAGS) s21_test.c $(TESTFLAGS) -fprofile-arcs -ftest-coverage s21_string.c -o report.out
+    ./report.out
+    lcov -o report.out.info -c -d .
+    genhtml -t "String tests" -o report report.out.info
+    rm .gcda.gcno *.info
+    open report/index.html
