@@ -1,0 +1,58 @@
+T_PATH := tests/
+
+CC = gcc
+C_FLAGS = -Wall -Werror -Wextra -std=c11
+LC = lcov -c -d . -o
+
+LIB_CMD = ar rc
+TESTS_FLAGS = -lcheck -lsubunit -lm -lrt -lpthread
+GCOV_FLAGS = --coverage -fprofile-arcs -ftest-coverage
+
+SRC = $(wildcard *.c)
+SRC_O = $(patsubst %.c, %.o, $(SRC))
+
+TESTS = $(wildcard $(T_PATH)test_*.c)
+TESTS_EXE = $(notdir $(patsubst %.c, %, $(TESTS)))
+
+.PHONY: all test clean 
+
+all: s21_string.a test
+
+s21_string.a: $(SRC_O) 
+	$(LIB_CMD) $@ $(SRC_O)
+	ranlib $@
+	rm -f $(SRC_O)
+
+%.o: %.c 
+	$(CC) $(C_FLAGS) -c $< $(GCOV_FLAGS) -lm
+
+test: $(TESTS_EXE) gcov_report
+
+test_%: $(T_PATH)test_%.c s21_string.a $(H_PATH)s21_string.h
+	$(CC) $(C_FLAGS) $< -L. s21_string.a -o $@ $(GCOV_FLAGS) $(TESTS_FLAGS) 
+	./$@
+
+gcov_report:
+	$(LC) report.info
+	genhtml -o report report.info
+	xdg-open report/index.html
+
+check_style:
+	@cp ../materials/linters/.clang-format .
+	@clang-format -n *.c *.h $(T_PATH)*.c
+	@rm .clang-format
+
+style:
+	@cp ../materials/linters/.clang-format .
+	@clang-format -i *.c *.h $(T_PATH)*.c
+	@rm .clang-format
+
+g_style:
+	@clang-format --style=Google -n $(S_PATH)*.c $(H_PATH)*.h $(T_PATH)*.c
+
+#valgrind --tool=memcheck --leak-check=yes  ./$@
+
+clean:
+	@rm -f *.a *.o *.gcno $(T_PATH)*.gcno $(S_PATH)*.gcno *.gcda *.info $(TESTS_EXE)
+	@rm -fr report
+	@echo "Cleaning is finished :)"
