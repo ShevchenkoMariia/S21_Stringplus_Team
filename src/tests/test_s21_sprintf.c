@@ -379,7 +379,7 @@ Suite *sprintfSuite(void) {
 }
 
 int main(void) {
-  // int numberFailed;
+  int numberFailed = 0;
   Suite *s;
   SRunner *sr;
 
@@ -387,10 +387,8 @@ int main(void) {
   sr = srunner_create(s);
 
   srunner_run_all(sr, CK_NORMAL);
-  // numberFailed =
-  srunner_ntests_failed(sr);
+  numberFailed = srunner_ntests_failed(sr);
   srunner_free(sr);
 
-  // return (numberFailed == 0) ? 0 : 1;
-  return 0;
+  return (numberFailed == 0) ? 0 : 1;
 }

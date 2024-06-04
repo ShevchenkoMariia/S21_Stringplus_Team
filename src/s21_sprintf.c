@@ -587,30 +587,29 @@ enum Types getType(char spec) {
   }
 }
 
-long int intA(long int val){
+long int intA(long int val) {
   if (val < 0) val *= -1;
   return val;
 }
 
-long double doubleA(long double val){
+long double doubleA(long double val) {
   if (val < 0.0) val *= -1.0;
   return val;
 }
 
 long double mpow(long double base, int exponent) {
-    double result = 1.0;
-    if (exponent == 0) {
-        return 1.0; 
-    } else if (exponent > 0) {
-        for (int i = 0; i < exponent; ++i) {
-            result *= base;
-        }
-        return result;
-    } else {
-        for (int i = 0; i < -exponent; ++i) {
-            result *= base;
-        }
-        return 1.0 / result;
+  double result = 1.0;
+  if (exponent == 0) {
+    return 1.0;
+  } else if (exponent > 0) {
+    for (int i = 0; i < exponent; ++i) {
+      result *= base;
     }
+    return result;
+  } else {
+    for (int i = 0; i < -exponent; ++i) {
+      result *= base;
+    }
+    return 1.0 / result;
+  }
 }
-
