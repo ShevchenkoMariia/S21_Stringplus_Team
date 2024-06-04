@@ -86,7 +86,7 @@ START_TEST(TestNullNeedle) {
 END_TEST
 
 START_TEST(TestNullBoth) {
-  char *haystack = "";
+  char *haystack = s21_NULL;
   char *needle = "";
   ck_assert_ptr_eq(s21_strstr(haystack, needle), strstr(haystack, needle));
 }

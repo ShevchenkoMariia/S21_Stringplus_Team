@@ -25,6 +25,16 @@ START_TEST(TestInsertInEmptyStr) {
 }
 END_TEST
 
+START_TEST(TestInsertEmptyStr2) {
+  char *str = s21_NULL;
+  char *src = "Hello";
+  s21_size_t startIndex = 0;
+  char *result = s21_insert(src, str, startIndex);
+  ck_assert_pstr_eq(result, "Hello");
+  free(result);
+}
+END_TEST
+
 START_TEST(TestInsertAtEndOfSrc) {
   char *str = "World";
   char *src = "Hello";
@@ -82,6 +92,7 @@ Suite *S21InsertSuite(void) {
 
   // Добавление теста в набор тестов
   tcase_add_test(tcaseCore, TestInsertInEmptyStr);
+  tcase_add_test(tcaseCore, TestInsertEmptyStr2);
   tcase_add_test(tcaseCore, TestInsertAtEndOfSrc);
   tcase_add_test(tcaseCore, TestInsertAtStartOfSrc);
   tcase_add_test(tcaseCore, TestInsertInMiddleOfSrc);
