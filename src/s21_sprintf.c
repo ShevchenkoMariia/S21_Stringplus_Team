@@ -253,7 +253,7 @@ void cut(char *buf) {
 int gTrim(long double val, int prec) {
   int res = 0, flag = 0;
   int count = 0;
-  if (fabsl(val) >= 1.0) {
+  if (doubleA(val) >= 1.0) {
     for (; val >= 1.0; val /= 10.0) {
       res--;
     }
@@ -306,7 +306,7 @@ long double newE(char *buf, va_list *args, char type, char reg, int prec,
   }
   res = val;
   b += setPrefixSign(buf, val, pref);
-  if (val < 0) val *= -1.0;
+  if (val < 0.0) val *= -1.0;
 
   sign = val > 1.0 ? '+' : '-';
   while (val < 1 || val >= 10) {
@@ -365,9 +365,9 @@ int newFloat(char *buf, void *value, char type, int prec, char pref,
 }
 
 void trimFloat(long double *value, int c) {
-  long double x = pow(10.0, (double)c);
+  long double x = mpow(10.0, c);
   *value *= x * 10.0;
-  if (labs((long int)*value) % 10 >= 5) *value += *value > 0.0 ? 10.0 : -10.0;
+  if (intA((long int)*value) % 10 >= 5) *value += *value > 0.0 ? 10.0 : -10.0;
   *value /= 10.0;
   *value = (long double)(long int)*value;
   *value /= x;
@@ -586,3 +586,31 @@ enum Types getType(char spec) {
       return -1;
   }
 }
+
+long int intA(long int val){
+  if (val < 0) val *= -1;
+  return val;
+}
+
+long double doubleA(long double val){
+  if (val < 0.0) val *= -1.0;
+  return val;
+}
+
+long double mpow(long double base, int exponent) {
+    double result = 1.0;
+    if (exponent == 0) {
+        return 1.0; 
+    } else if (exponent > 0) {
+        for (int i = 0; i < exponent; ++i) {
+            result *= base;
+        }
+        return result;
+    } else {
+        for (int i = 0; i < -exponent; ++i) {
+            result *= base;
+        }
+        return 1.0 / result;
+    }
+}
+

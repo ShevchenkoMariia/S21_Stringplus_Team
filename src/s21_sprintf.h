@@ -1,7 +1,7 @@
 #ifndef S21_SPRINTF_H
 #define S21_SPRINTF_H
 
-#include <math.h>
+//#include <math.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -74,5 +74,9 @@ void specifierProcess(format *format, char *cur, int *ind);
 
 int formatProcess(format *format, char *cur, int *ind, va_list *args);
 int isDigit(char c);
+
+long int intA(long int);
+long double doubleA(long double);
+long double mpow(long double, int);
 
 #endif
