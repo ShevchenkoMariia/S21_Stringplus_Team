@@ -2,15 +2,24 @@
 
 Implementation of the string.h library with additions.
 
+A group project. My experience gained as a result of the project:
+- organization of the workflow as a team leader (setting tasks and deadlines, coordinating team work, tracking and adjusting progress, motivation, organizing experience exchange and training, quality control of tasks);
+- implementation of standard functions from the string.h library;
+- application of C11 and POSIX.1-2017 standards, as well as following the Google Style coding style;
+- development and implementation of unit tests using the Check library to ensure code quality and achieve test coverage of more than 80%;
+- error handling;
+- working with dynamic memory;
+- working with Git.
+
 The russian version of the task can be found in the repository.
 
 ## Contents
 
-1. [Chapter I](#chapter-i)   
+1. [Chapter I](#chapter-i)  
    1.1. [Introduction](#introduction)
-2. [Chapter II](#chapter-ii)   
+2. [Chapter II](#chapter-ii)  
    2.1. [Information](#information)
-3. [Chapter III](#chapter-iii)   
+3. [Chapter III](#chapter-iii)  
    3.1. [Part 1](#part-1-implementation-of-the-stringh-library-functions)  
    3.2. [Part 2](#part-2-partial-implementation-of-the-sprintf-function)  
    3.3. [Part 3](#part-3-bonus-implementation-of-some-format-modifiers-of-the-sprintf-function)  
@@ -27,7 +36,7 @@ In this project you will develop your own implementation of the string.h library
 
 ## Information
 
-The C programming language has a set of functions implementing operations on strings (character strings and byte strings) in its standard library. Various operations, such as copying, concatenation, tokenization and searching are supported. For character strings, the standard library uses the convention that strings are null-terminated: a string of n characters is represented as an array of n + 1 elements, the last of which is a "NULL" character.   
+The C programming language has a set of functions implementing operations on strings (character strings and byte strings) in its standard library. Various operations, such as copying, concatenation, tokenization and searching are supported. For character strings, the standard library uses the convention that strings are null-terminated: a string of n characters is represented as an array of n + 1 elements, the last of which is a "NULL" character.  
 The only support for strings in the programming language proper is that the compiler translates quoted string constants into null-terminated strings.
 
 ### string.h Types
